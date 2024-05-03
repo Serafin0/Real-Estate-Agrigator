@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="@realestateagrigator.3jjea2d.mongodb.net">
+  <database-model serializer="dbm" dbms="MONGO" family-id="MONGO" format-version="4.49">
+    <root id="1">
+      <ServerVersion>6.0.12</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="admin">
+      <LocalIntrospectionTimestamp>2023-12-04.02:45:03</LocalIntrospectionTimestamp>
+    </schema>
+    <schema id="3" parent="1" name="local"/>
+  </database-model>
+</dataSource>

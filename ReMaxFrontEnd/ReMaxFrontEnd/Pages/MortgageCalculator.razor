@@ -1,0 +1,191 @@
+﻿@page "/mortageCalculator"
+
+<a href="/calculators">
+    <button class="btn btn-primary">Back</button>
+</a>
+
+<h3>Mortgage Calculator</h3>
+
+<input @bind="TextValue" placeholder="Asking Price" />
+<input @bind="TextValue2" placeholder="Mortgage Rate" />
+<button @onclick="Calculate">Calculate</button>
+
+@* <div class="form-group">
+        <label for="askingPrice">Asking Price</label>
+        <input id="askingPriice" class="form-control" @bind-="TextValue" />
+    </div> *@
+
+<h5>Down Payment</h5>
+
+<select @bind="SelectedPercentageScenario1">
+    <option value="10">10%</option>
+    <option value="15">15%</option>
+    <option value="20">20%</option>
+    <option value="25">25%</option>
+    <option value="30">30%</option>
+    <option value="35">35%</option>
+    <option value="40">40%</option>
+    <option value="45">45%</option>
+    <option value="50">50%</option>
+</select>
+<input @bind="DownPaymentScenario1" placeholder="Filled" />
+
+<select @bind="SelectedPercentageScenario2">
+    <option value="10">10%</option>
+    <option value="15">15%</option>
+    <option value="20">20%</option>
+    <option value="25">25%</option>
+    <option value="30">30%</option>
+    <option value="35">35%</option>
+    <option value="40">40%</option>
+    <option value="45">45%</option>
+    <option value="50">50%</option>
+</select>
+<input @bind="DownPaymentScenario2" placeholder="Filled" />
+
+<select @bind="SelectedPercentageScenario3">
+    <option value="10">10%</option>
+    <option value="15">15%</option>
+    <option value="20">20%</option>
+    <option value="25">25%</option>
+    <option value="30">30%</option>
+    <option value="35">35%</option>
+    <option value="40">40%</option>
+    <option value="45">45%</option>
+    <option value="50">50%</option>
+</select>
+<input @bind="DownPaymentScenario3" placeholder="Filled" />
+
+<select @bind="SelectedPercentageScenario4">
+    <option value="10">10%</option>
+    <option value="15">15%</option>
+    <option value="20">20%</option>
+    <option value="25">25%</option>
+    <option value="30">30%</option>
+    <option value="35">35%</option>
+    <option value="40">40%</option>
+    <option value="45">45%</option>
+    <option value="50">50%</option>
+</select>
+<input @bind="DownPaymentScenario4" placeholder="Filled" />
+
+<h5>Amortization Period</h5>
+
+<select @bind="SelectedAmortizationPeriod1">
+    <option value="5">5 Years</option>
+    <option value="10">10 Years</option>
+    <option value="15">15 Years</option>
+    <option value="20">20 Years</option>
+    <option value="25">25 Years</option>
+    <option value="30">30 Years</option>
+    <option value="35">35 Years</option>
+</select>
+<input @bind="AmortizationPeriod1Fee" placeholder="Filled" />
+
+<select @bind="SelectedAmortizationPeriod2">
+    <option value="5">5 Years</option>
+    <option value="10">10 Years</option>
+    <option value="15">15 Years</option>
+    <option value="20">20 Years</option>
+    <option value="25">25 Years</option>
+    <option value="30">30 Years</option>
+    <option value="35">35 Years</option>
+</select>
+<input @bind="AmortizationPeriod2Fee" placeholder="Filled" />
+
+<select @bind="SelectedAmortizationPeriod3">
+    <option value="5">5 Years</option>
+    <option value="10">10 Years</option>
+    <option value="15">15 Years</option>
+    <option value="20">20 Years</option>
+    <option value="25">25 Years</option>
+    <option value="30">30 Years</option>
+    <option value="35">35 Years</option>
+</select>
+<input @bind="AmortizationPeriod3Fee" placeholder="Filled" />
+
+<select @bind="SelectedAmortizationPeriod4">
+    <option value="5">5 Years</option>
+    <option value="10">10 Years</option>
+    <option value="15">15 Years</option>
+    <option value="20">20 Years</option>
+    <option value="25">25 Years</option>
+    <option value="30">30 Years</option>
+    <option value="35">35 Years</option>
+</select>
+<input @bind="AmortizationPeriod4Fee" placeholder="Filled" />
+
+@code {
+    private double TextValue { get; set; }
+    private double TextValue2 { get; set; }
+
+    private double DownPaymentScenario1 { get; set; }
+    private double DownPaymentScenario2 { get; set; }
+    private double DownPaymentScenario3 { get; set; }
+    private double DownPaymentScenario4 { get; set; }
+
+    private double AmortizationPeriod1Fee { get; set; }
+    private double AmortizationPeriod2Fee { get; set; }
+    private double AmortizationPeriod3Fee { get; set; }
+    private double AmortizationPeriod4Fee { get; set; }
+
+    private int SelectedPercentageScenario1 { get; set; }
+    private int SelectedPercentageScenario2 { get; set; }
+    private int SelectedPercentageScenario3 { get; set; }
+    private int SelectedPercentageScenario4 { get; set; }
+
+    private int SelectedAmortizationPeriod1 { get; set; }
+    private int SelectedAmortizationPeriod2 { get; set; }
+    private int SelectedAmortizationPeriod3 { get; set; }
+    private int SelectedAmortizationPeriod4 { get; set; }
+
+
+
+    static double GetDownPayment(double DownPaymentPercentage, double housingPrice)
+    {
+        double DownPayment = (DownPaymentPercentage / 100) * housingPrice;
+        return DownPayment;
+    }
+
+    static double GetMonthlyFeeMortgage(double AmortizationPeriod, double askingPrice, double housingPrice, double mortgageRate)
+    {
+        mortgageRate /= 100; //mortgage rate in numerical value
+        double remainderExpense = askingPrice - housingPrice; //remaining costs
+
+        double numberOfPayments = AmortizationPeriod * 12; //number of months
+
+
+        double mortgageExpense = (remainderExpense * mortgageRate) / 12;
+
+        double monthlyPayments = (remainderExpense / numberOfPayments) + mortgageExpense;
+
+
+        return monthlyPayments;
+    }
+    private void Calculate()
+    {
+        double DownPaymentScenario1Result = GetDownPayment(SelectedPercentageScenario1, TextValue);
+        DownPaymentScenario1 = DownPaymentScenario1Result;
+
+        double DownPaymentScenario2Result = GetDownPayment(SelectedPercentageScenario2, TextValue);
+        DownPaymentScenario2 = DownPaymentScenario2Result;
+
+        double DownPaymentScenario3Result = GetDownPayment(SelectedPercentageScenario3, TextValue);
+        DownPaymentScenario3 = DownPaymentScenario3Result;
+
+        double DownPaymentScenario4Result = GetDownPayment(SelectedPercentageScenario4, TextValue);
+        DownPaymentScenario4 = DownPaymentScenario4Result;
+
+        double AmortizationPeriod1FeeResults = GetMonthlyFeeMortgage(SelectedAmortizationPeriod1, TextValue, DownPaymentScenario1, TextValue2);
+        AmortizationPeriod1Fee = AmortizationPeriod1FeeResults;
+
+        double AmortizationPeriod2FeeResults = GetMonthlyFeeMortgage(SelectedAmortizationPeriod2, TextValue, DownPaymentScenario2, TextValue2);
+        AmortizationPeriod2Fee = AmortizationPeriod2FeeResults;
+
+        double AmortizationPeriod3FeeResults = GetMonthlyFeeMortgage(SelectedAmortizationPeriod3, TextValue, DownPaymentScenario3, TextValue2);
+        AmortizationPeriod3Fee = AmortizationPeriod3FeeResults;
+
+        double AmortizationPeriod4FeeResults = GetMonthlyFeeMortgage(SelectedAmortizationPeriod4, TextValue, DownPaymentScenario4, TextValue2);
+        AmortizationPeriod4Fee = AmortizationPeriod4FeeResults;
+    }
+}

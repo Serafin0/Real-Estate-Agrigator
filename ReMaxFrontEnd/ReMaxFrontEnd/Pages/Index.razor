@@ -1,0 +1,100 @@
+﻿@page "/"
+
+@using MongoDB.Driver
+@using MongoDB.Bson
+
+<PageTitle>Index</PageTitle>
+
+<h1>Welcome to ReHome</h1>
+
+<button class="btn btn-primary" @onclick="@showListingsChange">Show Listings</button>
+<a href="/calculators">
+    <button class="btn btn-primary">Realestate Calculators</button>
+</a>
+
+@if (listings == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!showListings)
+{
+
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Site</th>
+                <th>Type</th>
+                <th>URL</th>
+                <th>Sqft</th>
+                <th>Address</th>
+                <th>Bedrooms</th>
+                <th>Bathrooms</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var listing in listings)
+            {
+                <tr>
+                    <td>@listing.site</td>
+                    <th>@listing.type</th>
+                    <th><a href=@listing.url>URL</a></th>
+                    <th>@listing.sqft</th>
+                    <th>@listing.address</th>
+                    <th>@listing.numBedrooms</th>
+                    <th>@listing.numBathrooms</th>
+                    <th>@listing.price</th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Listing>? listings;
+    private bool showListings = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var mongoClient = new MongoClient("mongodb+srv://jonasshoukri:ipkMGioxeziEQa8p@realestateagrigator.3jjea2d.mongodb.net/?retryWrites=true&w=majority");
+        var cryptoNewsDatabase = mongoClient.GetDatabase("RealEstateAgrigator");
+        var newsCollection = cryptoNewsDatabase.GetCollection<Listing>("Listings");
+        listings = await newsCollection.Find(new BsonDocument()).ToListAsync();
+
+    }
+
+    public void showListingsChange()
+    {
+        showListings = (showListings == false) ? true : false;
+    }
+
+    public class Listing
+    {
+        public ObjectId Id { get; set; }
+        public string type { get; set; }
+        public string site { get; set; }
+        public string url { get; set; }
+        public double sqft { get; set; }
+        public string address { get; set; }
+        public int numBedrooms { get; set; }
+        public int numBathrooms { get; set; }
+        public double price { get; set; }
+        public string rawListing { get; set; }
+
+        public Listing()
+        {
+            type = "";
+            site = "";
+            url = "";
+            sqft = 0.0;
+            address = "";
+            numBedrooms = 0;
+            numBathrooms = 0;
+            price = 0;
+            rawListing = "";
+        }
+    }
+}

@@ -1,0 +1,72 @@
+﻿@page "/listings"
+@using MongoDB.Driver
+@using MongoDB.Bson
+
+<PageTitle>News</PageTitle>
+
+@* Let's add a header to the page. *@
+<h1>News</h1>
+
+@* And then some data. *@
+@* This is just a simple table contains news and their date. *@
+@if (listings != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>News</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @* Blazor takes this data from the `_news` field that we will fill later on. *@
+            @foreach (var newsEntry in listings)
+                {
+                <tr>
+                    <td>@newsEntry.Id</td>
+                    <td>@newsEntry.site</td>
+                </tr>
+                }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Listing>? listings;
+    protected override async Task OnInitializedAsync()
+    {
+        var mongoClient = new MongoClient("mongodb+srv://jonasshoukri:ipkMGioxeziEQa8p@realestateagrigator.3jjea2d.mongodb.net/?retryWrites=true&w=majority");
+        var cryptoNewsDatabase = mongoClient.GetDatabase("RealEstateAgrigator");
+        var newsCollection = cryptoNewsDatabase.GetCollection<Listing>("Listings");
+        listings = await newsCollection.Find(new BsonDocument()).ToListAsync();
+
+    }
+
+    public class Listing
+    {
+        public ObjectId Id { get; set; }
+        public string type { get; set; }
+        public string site { get; set; }
+        public string url { get; set; }
+        public double sqft { get; set; }
+        public string address { get; set; }
+        public int numBedrooms { get; set; }
+        public int numBathrooms { get; set; }
+        public double price { get; set; }
+        public string rawListing { get; set; }
+
+        public Listing()
+        {
+            type = "";
+            site = "";
+            url = "";
+            sqft = 0.0;
+            address = "";
+            numBedrooms = 0;
+            numBathrooms = 0;
+            price = 0;
+            rawListing = "";
+        }
+    }
+}
+

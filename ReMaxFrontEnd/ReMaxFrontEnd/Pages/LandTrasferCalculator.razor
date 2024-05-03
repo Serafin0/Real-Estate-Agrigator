@@ -1,0 +1,153 @@
+﻿@page "/landTransfer"
+
+
+
+    <a href="/calculators">
+        <button class="btn btn-primary">Back</button>
+    </a>
+
+    <h3>Land Transfer Tax Calculator</h3>
+
+    <button class="btn btn-primary" @onclick="Calculate">Calculate</button>
+
+    <div class="form-group">
+        <label for="askingPrice">Asking Price</label>
+        <input id="askingPrice" class="form-control" @bind="TextValue" />
+    </div>
+
+    <div class="form-group">
+        <label for="province">Province</label>
+        <select id="province" class="form-control" @bind="selectedProvince">
+            <option value="Ontario">Ontario</option>
+            <option value="Quebec">Quebec</option>
+            <option value="British Columbia">British Columbia</option>
+            <option value="Alberta">Alberta</option>
+            <option value="Saskatchewan">Saskatchewan</option>
+            <option value="Manitoba">Manitoba</option>
+            <option value="New Brunswick">New Brunswick</option>
+            <option value="Nova Scotia">Nova Scotia</option>
+            <option value="Newfoundland">Newfoundland</option>
+            <option value="Prince Edward Island">Prince Edward Island</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="provTax">Provincial Tax</label>
+        <input id="provTax" class="form-control" @bind="ProvValue" />
+    </div>
+
+    <div class="form-group">
+        <label for="munTax">Municipal Tax</label>
+        <input id="munTax" class="form-control" @bind="MunValue" />
+    </div>
+
+    <div class="form-group">
+        <label for="rebate">Rebate</label>
+        <input id="rebate" class="form-control" @bind="RebValue" />
+    </div>
+
+    <div class="form-group">
+        <label for="totalTax">Total</label>
+        <input id="totalTax" class="form-control" @bind="TotalValue" />
+    </div>
+
+    @code {
+        private double TextValue { get; set; }
+        private int currentCount = 0;
+        //private string selectedProvince { get; set; }
+        private void IncrementCount()
+        {
+            currentCount++;
+        }
+
+        private string selectedProvince { get; set; }
+        private double ProvValue { get; set; }
+        private double MunValue { get; set; }
+        private double RebValue { get; set; }
+        private double TotalValue { get; set; }
+
+        // private void OnProvinceSelected(string value)
+        // {
+        //     selectedProvince = value;
+
+        //     // Call a method or perform actions based on the selected province
+        //     HandleSelectedProvince();
+        // }
+
+        private void HandleSelectedProvince(double askingPrice, string theselectedProvince)
+        {
+            double provincialRate = 0.0;
+            double municipalRate = 0.0;
+            double rebate = 0.0;
+
+            switch (theselectedProvince)
+            {
+                case "Ontario":
+                    provincialRate = 0.01;
+                    municipalRate = 0.01; // Municipal rate is usually a percentage of the provincial rate
+                    rebate = 4000; // Example rebate amount for first-time homebuyers in Ontario
+                    break;
+                case "Quebec":
+                    provincialRate = 0.005;
+                    municipalRate = 0.005;
+                    // Quebec may have different rules, this is a simplified example
+                    break;
+                case "British Columbia":
+                    provincialRate = 0.018;
+                    municipalRate = 0.001;
+                    break;
+                case "Alberta":
+                    provincialRate = 0.016;
+                    municipalRate = 0.016;
+                    // Alberta has different rules, this is a simplified example
+                    break;
+                case "Saskatchewan":
+                    provincialRate = 0.003;
+                    municipalRate = 0;
+                    break;
+                case "Manitoba":
+                    provincialRate = 0.015;
+                    municipalRate = 0.016;
+                    break;
+                case "New brunswick":
+                    provincialRate = 0.01;
+                    municipalRate = 0;
+                    break;
+                case "Nova scotia":
+                    provincialRate = 1;
+                    municipalRate = 0.015;
+                    break;
+                case "Newfoundland":
+                    provincialRate = 0.0008;
+                    municipalRate = 0;
+                    break;
+                case "Prince Edward island":
+                    provincialRate = 0.01;
+                    municipalRate = 0;
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid province.");
+                    return;
+            }
+
+            // Calculate land transfer taxes
+            double provincialTax = askingPrice * provincialRate;
+            double municipalTax = askingPrice * municipalRate;
+            double totalTax = provincialTax + municipalTax - rebate;
+
+            ProvValue = provincialTax;
+            MunValue = municipalTax;
+            RebValue = rebate;
+            TotalValue = provincialTax + municipalTax - rebate;
+        }
+
+        private void Calculate()
+        {
+            HandleSelectedProvince(TextValue, selectedProvince);
+
+        }
+
+
+    }
+
